@@ -45,7 +45,7 @@ use role_cache::RoleCache;
 #[group]
 #[commands(
     help, renewed, curseforge, prefix, forge, coremod, invite, server_ip, online, donate, facebook,
-    discord, user_info, role, listroles, instagram
+    discord, user_info, role, listroles
 )]
 struct General;
 
@@ -67,7 +67,7 @@ struct QA;
 struct Meme;
 
 #[group]
-#[commands(wiki, tolkien, minecraft)]
+#[commands(wiki, lotrmod, tolkien, minecraft)]
 struct Wiki;
 
 #[group]

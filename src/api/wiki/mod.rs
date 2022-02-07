@@ -138,7 +138,7 @@ pub async fn display(
     let rclient = get_reqwest_client!(ctx);
 
     let img = match wiki {
-        LotrMod(_) | Minecraft => {
+        LotrMod(_) | Minecraft | EoA => {
             let req = [
                 ("format", "json"),
                 ("action", "imageserving"),
