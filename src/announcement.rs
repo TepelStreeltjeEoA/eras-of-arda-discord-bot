@@ -224,8 +224,8 @@ fn parse_embed(embed: &AnnouncementEmbed) -> CreateEmbed {
             match preset {
                 LotrFacebook => {
                     builder.author(|a| {
-                        a.name("LOTR Mod Official Facebook");
-                        a.url("https://www.facebook.com/LOTRMC");
+                        a.name("Eras of Arda Community Official Facebook");
+                        a.url("https://www.facebook.com/erasofarda/");
                         a.icon_url(crate::constants::FACEBOOK_ICON);
                         a
                     });
