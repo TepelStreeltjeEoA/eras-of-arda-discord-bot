@@ -1,7 +1,7 @@
 [package]
 name = "eras-of-arda-community-discord-bot"
 version = "0.1.0"
-authors = ["AldanTanneo <aldantanneo@gmail.com>, TepelStreeltje, Valiec"]
+authors = ["AldanTanneo <aldantanneo@gmail.com>", "TepelStreeltje", "Valiec"]
 edition = "2021"
 
 [profile.release]
