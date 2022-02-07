@@ -7,7 +7,7 @@ pub const BOT_ID: UserId = UserId(780858391383638057);
 /// User ID of the owner
 pub const OWNER_ID: UserId = UserId(405421991777009678);
 /// Guild ID of the [LOTR Mod Community Discord](https://discord.gg/QXkZzKU)
-pub const LOTR_DISCORD: GuildId = GuildId(405091134327619587);
+pub const LOTR_DISCORD: GuildId = GuildId(325180225979809792);
 
 /// Maximum size, in bytes, of a JSON file for [announcements][crate::announcement]
 /// and [custom commands][crate::commands::custom_commands]
