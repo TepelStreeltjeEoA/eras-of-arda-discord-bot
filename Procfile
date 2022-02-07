@@ -1,1 +1,1 @@
-worker: ./target/release/lotr-mod-discord-bot
+worker: ./target/release/eras-of-arda-community-discord-bot
