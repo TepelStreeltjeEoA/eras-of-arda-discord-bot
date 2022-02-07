@@ -161,7 +161,7 @@ impl std::fmt::Display for PartialBugReport {
         };
         write!(
             f,
-            "LOTR-{} — {}  ({})",
+            "EoA-{} — {}  ({})",
             self.bug_id,
             self.title,
             self.timestamp.format(format_str)
