@@ -294,7 +294,7 @@ pub async fn donate(ctx: &Context, msg: &Message) -> CommandResult {
                 e.colour(Colour::new(0xCEBD9C));
                 e.description(
                     "Donations will be thanked with the Supporter Shield \
-[Shield](https://lotrminecraftmod.fandom.com/wiki/Shield).",
+[Shield](https://erasofarda.fandom.com/wiki/Donator_Shield).",
                 );
                 e.thumbnail(crate::constants::DONATE_THUMBNAIL);
                 e.title("Donate to the mod!");
