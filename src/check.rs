@@ -163,7 +163,7 @@ pub async fn is_lotr_discord(_: &Context, msg: &Message) -> Result<(), Reason> {
         Ok(())
     } else {
         Err(Reason::Log(
-            "Tried to use a LOTR Mod Discord only command outside the server".into(),
+            "Tried to use an Eras of Arda Community Discord only command outside the server".into(),
         ))
     }
 }
