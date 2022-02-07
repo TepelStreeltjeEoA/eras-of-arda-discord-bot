@@ -1,6 +1,6 @@
 ![build](https://github.com/AldanTanneo/lotr-mod-discord-bot/workflows/Rust%20workflow/badge.svg)
 
-# LOTR Mod Discord Bot
+# Eras of Arda Community Discord Bot
 
 [<img src="https://vignette.wikia.nocookie.net/lotrminecraftmod/images/8/8e/GrukRenewedLogo.png"/>](https://www.curseforge.com/minecraft/mc-mods/the-lord-of-the-rings-mod-renewed/)
 
