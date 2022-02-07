@@ -25,7 +25,7 @@ pub const MANAGE_BOT_PERMS: Permissions = Permissions::ADMINISTRATOR
 
 /// Bot icon
 pub const BOT_ICON: &str =
-    "https://cdn.discordapp.com/avatars/780858391383638057/ed9b9a5b688dc3b8d9ea580584d25033.webp";
+    "https://cdn.discordapp.com/attachments/325553747898007553/612322535157268489/Test.png";
 /// Termite icon for bug reports
 pub const TERMITE_IMAGE: &str =
     "https://media.discordapp.net/attachments/781837314975989772/839479742457839646/termite.png";
@@ -55,7 +55,7 @@ pub const DONATE_THUMBNAIL: &str =
 pub const FORGE_LINK: &str =
     "http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_{mc}.html";
 /// [LOTR Mod Wiki](https://lotrminecraftmod.fandom.com) adress
-pub const WIKI_DOMAIN: &str = "lotrminecraftmod.fandom.com";
+pub const WIKI_DOMAIN: &str = "https://erasofarda.fandom.com/";
 /// Paypal donation link in dollars
 pub const PAYPAL_LINK_DOLLARS: &str =
     "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YZ97X6UBJJD7Y";
