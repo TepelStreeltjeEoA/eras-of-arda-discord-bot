@@ -63,27 +63,13 @@ impl Default for Lang {
 impl Lang {
     pub const fn main(&self) -> &str {
         match self {
-            En => "The Lord of the Rings Minecraft Mod Wiki",
-            Fr => "Wiki du Mod Minecraft Seigneur des Anneaux",
-            De => "Der Herr der Ringe Minecraft Mod Wiki",
-            Nl => "In de ban van de Ring Minecraft Mod wiki",
-            Zh => "魔戒我的世界模组百科",
-            Ru => "Средиземье в Minecraft",
-            Es => "Wiki Lotrminecraftmod",
-            Ja => "マインクラフト　指輪物語MOD Wiki",
+            En => "The Eras of Arda Community wiki",
         }
     }
 
     fn maindesc(&self, username: &str) -> String {
         match self {
-            En => format!("Welcome, {}, to The Lord of the Rings Minecraft Mod Wiki, the official public wiki for everything related to the Lord of the Rings Mod.", username),
-            Fr => format!("Bienvenue, {}, sur le Wiki du Mod Seigneur des Anneaux pour Minecraft, un wiki public pour tout ce qui concerne le Mod Seigneur des Anneaux.", username),
-            De => format!("Willkommen, {}, im Der Herr der Ringe Minecraft Mod Wiki, einem öffentlichem Wiki für alles, was sich auf die Der Herr der Ringe Mod bezieht.", username),
-            Nl => format!("Welkom, {}, op de In de ban van de Ring Minecraft Mod wiki, de officiële openbare Nederlandstalige wiki voor alles in verband met de In de ban van de Ring Mod.", username),
-            Zh => "欢迎你来到魔戒我的世界模组百科！".into(),
-            Ru => format!("Добро пожаловать, {}, на Вики, связанную с модом Lord of the Rings Mod.", username),
-            Es => "Bienvenidos a Wiki Lotrminecraftmod\nEl wiki sobre el mod El Señor de los Anillos para Minecraft que todos pueden editar.".into(),
-            Ja => "このサイトはThe Lord of The Rings Minecraft Mod Wiki、指輪物語MODに関する公式Wikiの日本語版です。FANDOMのアカウントを作成して言語設定を日本語にすることで、メニュー周りも日本語になり読みやすくなります。".into()
+            En => format!("Welcome, {}, to The Eras of Arda Community Wiki, the official public wiki for everything related to Eras of Arda projects.", username),
         }
     }
 
@@ -200,7 +186,7 @@ impl Wikis {
 
     pub fn site(&self) -> String {
         match self {
-            LotrMod(lang) => format!("https://lotrminecraftmod.fandom.com/{}", lang),
+            LotrMod(lang) => format!("https://erasofarda.fandom.com/{}", lang),
             TolkienGateway => "https://tolkiengateway.net".to_string(),
             Minecraft => "https://minecraft.gamepedia.com".to_string(),
         }
@@ -209,7 +195,7 @@ impl Wikis {
     pub fn default_img(&self) -> String {
         match self {
             LotrMod(_) => {
-                "https://static.wikia.nocookie.net/lotrminecraftmod/images/8/8e/GrukRenewedLogo.png"
+                "https://cdn.discordapp.com/attachments/325553747898007553/612322535157268489/Test.png"
             }
             TolkienGateway => "https://medias.liberation.fr/photo/1277413-author-j-r-r-tolkien.jpg",
             Minecraft => "https://i.ytimg.com/vi/Zeh9lmHGVM4/maxresdefault.jpg",
