@@ -9,7 +9,7 @@ use serenity::prelude::*;
 use std::time::Duration;
 
 use crate::check::*;
-use crate::constants::{LOTR_DISCORD, MANAGE_BOT_PERMS, OWNER_ID};
+use crate::constants::{EOA_DISCORD, MANAGE_BOT_PERMS, OWNER_ID};
 use crate::database::admin_data::is_admin_function;
 use crate::database::bug_reports::{
     add_bug_report, add_link, add_notified_user, change_bug_status, change_title, get_bug_from_id,
@@ -113,7 +113,7 @@ pub async fn notify_users(
         .message(ctx, bug.message_id)
         .await
         .map(|mut m| {
-            m.guild_id = Some(LOTR_DISCORD);
+            m.guild_id = Some(EOA_DISCORD);
             m
         });
     let message_link = linked_message.as_ref().map(|m| m.link()).ok();
@@ -660,12 +660,12 @@ pub async fn bug(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult 
         .message(ctx, bug.message_id)
         .await
         .map(|mut m| {
-            m.guild_id = Some(LOTR_DISCORD);
+            m.guild_id = Some(EOA_DISCORD);
             m
         });
     let message_link = linked_message.as_ref().map(|m| m.link()).ok();
 
-    let is_lotr_discord = msg.guild_id == Some(LOTR_DISCORD);
+    let is_lotr_discord = msg.guild_id == Some(EOA_DISCORD);
     let is_admin = if let Some(guild_id) = msg.guild_id {
         is_admin_function(ctx, guild_id, msg.author.id)
             .await

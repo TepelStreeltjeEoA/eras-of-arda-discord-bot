@@ -28,7 +28,7 @@ use serenity::futures::future::join;
 use serenity::model::prelude::*;
 use serenity::prelude::*;
 
-use crate::constants::{LOTR_DISCORD, MANAGE_BOT_PERMS, OWNER_ID};
+use crate::constants::{EOA_DISCORD, MANAGE_BOT_PERMS, OWNER_ID};
 use crate::database::{blacklist::check_blacklist, config::get_minecraft_ip};
 use crate::is_admin;
 use crate::utils::has_permission;
@@ -159,7 +159,7 @@ pub async fn is_minecraft_server(ctx: &Context, msg: &Message) -> Result<(), Rea
 #[check]
 #[name = "is_lotr_discord"]
 pub async fn is_lotr_discord(_: &Context, msg: &Message) -> Result<(), Reason> {
-    if msg.guild_id == Some(LOTR_DISCORD) || msg.author.id == OWNER_ID {
+    if msg.guild_id == Some(EOA_DISCORD) || msg.author.id == OWNER_ID {
         Ok(())
     } else {
         Err(Reason::Log(

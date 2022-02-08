@@ -131,7 +131,7 @@ impl EventHandler for Handler {
         let guild_id = match reaction.guild_id {
             None => return,
             Some(guild_id) => {
-                if guild_id != LOTR_DISCORD {
+                if guild_id != EOA_DISCORD {
                     return;
                 }
                 guild_id
@@ -147,7 +147,7 @@ impl EventHandler for Handler {
         let guild_id = match message.guild_id {
             None => return,
             Some(guild_id) => {
-                if guild_id != LOTR_DISCORD {
+                if guild_id != EOA_DISCORD {
                     return;
                 }
                 guild_id
