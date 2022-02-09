@@ -341,6 +341,8 @@ pub async fn get_bug_list(
 ) -> Option<(Vec<PartialBugReport>, u32)> {
     let mut conn = get_database_conn!(ctx);
 
+    println!("getting total...");
+
     let total: u32 = conn
         .query_first(format!(
             "SELECT COUNT(bug_id) FROM {} WHERE {} {category}",
@@ -359,9 +361,11 @@ pub async fn get_bug_list(
         .await
         .ok()??;
 
+    println!("total: {}", total);
+
     conn.exec_map(
         format!(
-            "SELECT bug_id, title, status, timestamp, legacy FROM {} \
+            "SELECT bug_id, title, status, timestamp, category FROM {} \
 WHERE {} {category} ORDER BY {ordering} LIMIT :limit OFFSET :offset",
             TABLE_BUG_REPORTS,
             if let Some(status) = status {

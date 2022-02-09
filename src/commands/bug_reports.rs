@@ -303,7 +303,7 @@ async fn display_bugs(
     if let Some((bugs, total_bugs)) =
         get_bug_list(ctx, status, limit, display_order, category, page - 1).await
     {
-        if ((page - 1) * limit) >= total_bugs {
+        if total_bugs != 0 && ((page - 1) * limit) >= total_bugs {
             reply_to.failure(ctx, "Page number too high, consider calling `!bugs` and using the navigation arrows.").await?;
             return Err(SerenityError::Other("page_too_high"));
         }
@@ -324,7 +324,7 @@ async fn display_bugs(
                 },
                 total_bugs
             );
-            content_alt = "_No open bugs!_";
+            content_alt = "_No bugs with this status!_";
             content = bugs
                 .iter()
                 .map(|b| {
@@ -351,7 +351,7 @@ async fn display_bugs(
                 },
                 total_bugs
             );
-            content_alt = "_No bugs with this status!_";
+            content_alt = "_No open bugs!_";
             content = bugs
                 .iter()
                 .map(|b| {

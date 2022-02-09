@@ -5,7 +5,7 @@ use serenity::utils::Colour;
 /// User ID of the bot
 pub const BOT_ID: UserId = UserId(780858391383638057);
 /// User ID of the owner
-pub const OWNER_ID: UserId = UserId(405421991777009678);
+pub const OWNER_ID: UserId = UserId(222868216920145920);
 /// Guild ID of the EoA Discord
 pub const EOA_DISCORD: GuildId = GuildId(325180225979809792);
 
