@@ -140,13 +140,13 @@ impl BugStatus {
     #[inline]
     pub const fn colour(self) -> Colour {
         match self {
-            Resolved => Colour::new(0x2fd524),
-            Low => Colour::new(0xfef001),
-            Medium => Colour::new(0xfd9a01),
-            High => Colour::new(0xfd6104),
-            Critical => Colour::new(0xff0000),
-            Closed => Colour::new(0x7694cb),
-            ForgeVanilla => Colour::new(0x9f00c5),
+            Resolved => Colour(0x2fd524),
+            Low => Colour(0xfef001),
+            Medium => Colour(0xfd9a01),
+            High => Colour(0xfd6104),
+            Critical => Colour(0xff0000),
+            Closed => Colour(0x7694cb),
+            ForgeVanilla => Colour(0x9f00c5),
         }
     }
 
@@ -185,6 +185,51 @@ pub struct BugLink {
 impl std::fmt::Display for BugLink {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "[{}]({}) (#{})", self.title, self.url, self.id)
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum BugCategory {
+    Renewed,
+    Legacy,
+}
+
+#[derive(Debug, Clone)]
+pub struct ParseCategoryError;
+
+impl std::str::FromStr for BugCategory {
+    type Err = ParseCategoryError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        use BugCategory::*;
+
+        Ok(match s.to_ascii_lowercase().as_str() {
+            "renewed" => Renewed,
+            "legacy" => Legacy,
+            _ => Err(ParseCategoryError)?,
+        })
+    }
+}
+
+impl std::fmt::Display for BugCategory {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl Default for BugCategory {
+    fn default() -> BugCategory {
+        BugCategory::Renewed
+    }
+}
+
+impl BugCategory {
+    pub const fn as_str(self) -> &'static str {
+        use BugCategory::*;
+        match self {
+            Renewed => "renewed",
+            Legacy => "legacy",
+        }
     }
 }
 
@@ -455,7 +500,8 @@ pub async fn change_bug_status(
         Ok(msg) => {
             if let Err(e) = msg.delete_reaction_emoji(ctx, old_status.reaction()).await {
                 println!("Could not remove reaction from bug report: {}", e);
-            } else if let Err(e) = msg.react(ctx, new_status.reaction()).await {
+            }
+            if let Err(e) = msg.react(ctx, new_status.reaction()).await {
                 println!("Could not add reaction to bug report: {}", e);
             }
         }
@@ -611,12 +657,12 @@ pub async fn change_category(
                 TABLE_BUG_REPORTS
             ),
             params! {
-                "bug_id" => bug_id
+                "bug_id" => bug_id,
             },
         )
         .await
         .ok()??
-        .parse::<BugCategory>()
+        .parse()
         .expect("Expected a valid bug category from the database");
 
     conn.exec_drop(

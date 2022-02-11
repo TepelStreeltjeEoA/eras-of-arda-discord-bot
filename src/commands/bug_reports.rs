@@ -303,7 +303,7 @@ async fn display_bugs(
     if let Some((bugs, total_bugs)) =
         get_bug_list(ctx, status, limit, display_order, category, page - 1).await
     {
-        if total_bugs != 0 && ((page - 1) * limit) >= total_bugs {
+        if total_bugs != 0 && (page - 1) * limit >= total_bugs {
             reply_to.failure(ctx, "Page number too high, consider calling `!bugs` and using the navigation arrows.").await?;
             return Err(SerenityError::Other("page_too_high"));
         }
@@ -967,23 +967,25 @@ pub async fn bug_toggle_edition(ctx: &Context, msg: &Message, mut args: Args) ->
         {
             if let Ok(category) = args.single::<BugCategory>() {
                 if let Some(old_category) = change_category(ctx, bug_id, category).await {
-                    termite_success!(
-                        ctx,
-                        msg,
-                        "EoA-{} has been changed from {} to {}",
-                        bug_id,
-                        old_category,
-                        category
-                    );
-                    notify_users(
-                        ctx,
-                        bug_id,
-                        format!(
-                            "A bug you are subscribed to has been changed from {} to {}",
-                            old_category, category
-                        ),
-                    )
-                    .await?;
+                     if category != old_category {
+                        termite_success!(
+                            ctx,
+                            msg,
+                            "EoA-{} has been changed from {} to {}",
+                            bug_id,
+                            old_category,
+                            category
+                        );
+                        notify_users(
+                            ctx,
+                            bug_id,
+                            format!(
+                                "A bug you are subscribed to has been changed from {} to {}",
+                                old_category, category
+                            ),
+                        )
+                        .await?;
+                    }
                 } else {
                     failure!(ctx, msg, "The bug EoA-{} does not exist!", bug_id);
                 }
@@ -993,7 +995,7 @@ pub async fn bug_toggle_edition(ctx: &Context, msg: &Message, mut args: Args) ->
                     msg,
                     "The first argument must be one of \
 `fa_renewed`, `fa_legacy`, `sa_renewed` or `sa_legacy`"
-                )
+                );
             }
         } else {
             failure!(ctx, msg, "`{}` is not a valid bug id!", bug_id);
