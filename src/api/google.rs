@@ -29,7 +29,7 @@ pub async fn google_search(ctx: &Context, query: &str, wiki: &Wikis) -> Option<[
         ("cx", &search_engine_id),
         ("q", &query.replace(" ", "+")),
         ("num", "3"),
-        ("siteSearch", &wiki.site()),
+        ("siteSearch", wiki.site()),
     ];
 
     let res_body = rclient
