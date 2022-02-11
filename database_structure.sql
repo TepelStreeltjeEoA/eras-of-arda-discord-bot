@@ -35,7 +35,7 @@ CREATE TABLE `bug_reports` (
   `title` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `status` enum('closed','forgevanilla','resolved','low','medium','high','critical') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'medium',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `legacy` tinyint(1) NOT NULL DEFAULT '0'
+  `category` enum('fa_renewed','fa_legacy','sa_renewed','sa_legacy') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'fa_renewed',
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------

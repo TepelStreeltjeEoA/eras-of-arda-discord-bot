@@ -5,9 +5,9 @@ use serenity::utils::Colour;
 /// User ID of the bot
 pub const BOT_ID: UserId = UserId(780858391383638057);
 /// User ID of the owner
-pub const OWNER_ID: UserId = UserId(405421991777009678);
-/// Guild ID of the [LOTR Mod Community Discord](https://discord.gg/QXkZzKU)
-pub const LOTR_DISCORD: GuildId = GuildId(405091134327619587);
+pub const OWNER_ID: UserId = UserId(222868216920145920);
+/// Guild ID of the EoA Discord
+pub const EOA_DISCORD: GuildId = GuildId(325180225979809792);
 
 /// Maximum size, in bytes, of a JSON file for [announcements][crate::announcement]
 /// and [custom commands][crate::commands::custom_commands]
@@ -44,7 +44,7 @@ pub const INVITE_PERMISSIONS: Permissions = Permissions::MANAGE_ROLES
 
 /// Bot icon
 pub const BOT_ICON: &str =
-    "https://cdn.discordapp.com/avatars/780858391383638057/ed9b9a5b688dc3b8d9ea580584d25033.webp";
+    "https://cdn.discordapp.com/attachments/325553747898007553/612322535157268489/Test.png";
 /// Termite icon for bug reports
 pub const TERMITE_IMAGE: &str =
     "https://media.discordapp.net/attachments/781837314975989772/839479742457839646/termite.png";
@@ -74,7 +74,7 @@ pub const DONATE_THUMBNAIL: &str =
 pub const FORGE_LINK: &str =
     "http://files.minecraftforge.net/maven/net/minecraftforge/forge/index_{mc}.html";
 /// [LOTR Mod Wiki](https://lotrminecraftmod.fandom.com) adress
-pub const WIKI_DOMAIN: &str = "lotrminecraftmod.fandom.com";
+pub const WIKI_DOMAIN: &str = "https://erasofarda.fandom.com/";
 /// Paypal donation link in dollars
 pub const PAYPAL_LINK_DOLLARS: &str =
     "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YZ97X6UBJJD7Y";

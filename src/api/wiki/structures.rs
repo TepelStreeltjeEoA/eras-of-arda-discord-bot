@@ -76,7 +76,7 @@ impl Lang {
 
     fn maindesc(&self, username: &str) -> String {
         match self {
-            En => format!("Welcome, {}, to The Lord of the Rings Minecraft Mod Wiki, the official public wiki for everything related to the Lord of the Rings Mod.", username),
+             En => format!("Welcome, {}, to The Lord of the Rings Minecraft Mod Wiki, the official public wiki for everything related to the Lord of the Rings Mod.", username),
             Fr => format!("Bienvenue, {}, sur le Wiki du Mod Seigneur des Anneaux pour Minecraft, un wiki public pour tout ce qui concerne le Mod Seigneur des Anneaux.", username),
             De => format!("Willkommen, {}, im Der Herr der Ringe Minecraft Mod Wiki, einem öffentlichem Wiki für alles, was sich auf die Der Herr der Ringe Mod bezieht.", username),
             Nl => format!("Welkom, {}, op de In de ban van de Ring Minecraft Mod wiki, de officiële openbare Nederlandstalige wiki voor alles in verband met de In de ban van de Ring Mod.", username),
@@ -175,6 +175,7 @@ impl std::fmt::Display for Lang {
 
 #[derive(Debug, PartialEq)]
 pub enum Wikis {
+    EoA,
     LotrMod(Lang),
     TolkienGateway,
     Minecraft,
@@ -183,6 +184,7 @@ pub enum Wikis {
 impl Wikis {
     pub const fn get_api(&self) -> &str {
         match self {
+            EoA => "https://erasofarda.fandom.com/api.php?",
             LotrMod(lang) => match lang {
                 En => "https://lotrminecraftmod.fandom.com/api.php?",
                 Fr => "https://lotrminecraftmod.fandom.com/fr/api.php?",
@@ -198,16 +200,27 @@ impl Wikis {
         }
     }
 
-    pub fn site(&self) -> String {
+    pub fn site(&self) -> &str {
         match self {
-            LotrMod(lang) => format!("https://lotrminecraftmod.fandom.com/{}", lang),
-            TolkienGateway => "https://tolkiengateway.net".to_string(),
-            Minecraft => "https://minecraft.gamepedia.com".to_string(),
+            EoA => "https://erasofarda.fandom.com",
+            LotrMod(lang) => match lang {
+                En => "https://lotrminecraftmod.fandom.com",
+                Fr => "https://lotrminecraftmod.fandom.com/fr",
+                De => "https://lotrminecraftmod.fandom.com/de",
+                Nl => "https://lotrminecraftmod.fandom.com/nl",
+                Zh => "https://lotrminecraftmod.fandom.com/zh",
+                Ru => "https://lotrminecraftmod.fandom.com/ru",
+                Es => "https://lotrminecraftmod.fandom.com/es",
+                Ja => "https://lotrminecraftmod.fandom.com/ja",
+            },
+            TolkienGateway => "https://tolkiengateway.net",
+            Minecraft => "https://minecraft.gamepedia.com",
         }
     }
 
     pub fn default_img(&self) -> String {
         match self {
+            EoA => "https://static.wikia.nocookie.net/firstageserver/images/e/e6/Site-logo.png",
             LotrMod(_) => {
                 "https://static.wikia.nocookie.net/lotrminecraftmod/images/8/8e/GrukRenewedLogo.png"
             }
@@ -219,6 +232,7 @@ impl Wikis {
 
     pub const fn icon(&self) -> &str {
         match self {
+            EoA => "https://cdn.discordapp.com/attachments/325553747898007553/612322535157268489/Test.png",
             LotrMod(_) => "https://i.ibb.co/v1hHg3G/test.png",
             TolkienGateway => "https://i.ibb.co/VYKWK7V/favicon.png",
             Minecraft => {
@@ -229,6 +243,7 @@ impl Wikis {
 
     pub const fn name(&self) -> &str {
         match self {
+            EoA => " The Eras of Arda Wiki",
             LotrMod(lang) => lang.main(),
             TolkienGateway => "Tolkien Gateway",
             Minecraft => "Official Minecraft Wiki",
@@ -237,10 +252,20 @@ impl Wikis {
 
     pub fn default(&self, username: &str) -> GenericPage {
         match self {
+            EoA => GenericPage {
+                title: self.name().into(),
+                link: self.site().into(),
+                desc: Some(
+                    "Eras of Arda is a group of dedicated individuals who seek to \
+expand on upon the LOTRMod to include the First and Second ages of Middle Earth. \
+The First Age Addon adds new items, armors, factions, npcs and so much more."
+                        .into(),
+                ),
+            },
             LotrMod(_) => Page.main_page(self, username),
             TolkienGateway => GenericPage {
                 title: self.name().into(),
-                link: self.site(),
+                link: self.site().into(),
                 desc: Some(format!(
                     "Welcome, {}, to Tolkien Gateway,
 the J.R.R. Tolkien encyclopedia that anyone can edit.",
@@ -249,7 +274,7 @@ the J.R.R. Tolkien encyclopedia that anyone can edit.",
             },
             Minecraft => GenericPage {
                 title: self.name().into(),
-                link: self.site(),
+                link: self.site().into(),
                 desc: Some(format!(
                     "Welcome, {}, to the Official Minecraft Wiki,
 a publicly accessible and editable wiki for information on Minecraft and related subjects.",
@@ -299,50 +324,67 @@ impl std::fmt::Display for Namespace {
 impl Namespace {
     pub fn main_page(&self, wiki: &Wikis, username: &str) -> GenericPage {
         match wiki {
-            LotrMod(lang) => {
-                match self {
-                    Page => GenericPage {
-                        title: lang.main().into(),
-                        link: wiki.site(),
-                        desc: Some(lang.maindesc(username)),
-                    },
-                    User => GenericPage {
-                        title: lang.users(),
-                        link: format!("{}/Special:Listusers", wiki.site()),
-                        desc: None,
-                    },
-                    File => GenericPage {
-                        title: lang.files(),
-                        link: format!("{}/Special:ListFiles", wiki.site()),
-                        desc: None,
-                    },
-                    Template => GenericPage {
-                        title: lang.templates(),
-                        link: format!("{}/Special:PrefixIndex?namespace=10", wiki.site()),
-                        desc: None,
-                    },
-                    Category => GenericPage {
-                        title: lang.categories(),
-                        link: format!("{}/Special:Categories", wiki.site()),
-                        desc: None,
-                    },
-                    Blog => GenericPage {
-                        title: lang.blogs(),
-                        link: format!("{}/Blog:Recent_posts", wiki.site()),
-                        desc: None,
-                    },
-                }
+            EoA => match self {
+                Page => EoA.default(username),
+                User => GenericPage {
+                    title: En.users(),
+                    link: format!("{}/Special:Listusers", wiki.site()),
+                    desc: None,
+                },
+                File => GenericPage {
+                    title: En.files(),
+                    link: format!("{}/Special:ListFiles", wiki.site()),
+                    desc: None,
+                },
+                Template => GenericPage {
+                    title: En.templates(),
+                    link: format!("{}/Special:PrefixIndex?namespace=10", wiki.site()),
+                    desc: None,
+                },
+                Category => GenericPage {
+                    title: En.categories(),
+                    link: format!("{}/Special:Categories", wiki.site()),
+                    desc: None,
+                },
+                Blog => GenericPage {
+                    title: En.blogs(),
+                    link: format!("{}/Blog:Recent_posts", wiki.site()),
+                    desc: None,
+                },
             },
-            TolkienGateway => GenericPage {
-                title: "Tolkien Gateway".into(),
-                link: wiki.site(),
-                desc: Some("Welcome to Tolkien Gateway,\nthe J.R.R. Tolkien encyclopedia that anyone can edit.".into()),
+            LotrMod(lang) => match self {
+                Page => GenericPage {
+                    title: lang.main().into(),
+                    link: wiki.site().into(),
+                    desc: Some(lang.maindesc(username)),
+                },
+                User => GenericPage {
+                    title: lang.users(),
+                    link: format!("{}/Special:Listusers", wiki.site()),
+                    desc: None,
+                },
+                File => GenericPage {
+                    title: lang.files(),
+                    link: format!("{}/Special:ListFiles", wiki.site()),
+                    desc: None,
+                },
+                Template => GenericPage {
+                    title: lang.templates(),
+                    link: format!("{}/Special:PrefixIndex?namespace=10", wiki.site()),
+                    desc: None,
+                },
+                Category => GenericPage {
+                    title: lang.categories(),
+                    link: format!("{}/Special:Categories", wiki.site()),
+                    desc: None,
+                },
+                Blog => GenericPage {
+                    title: lang.blogs(),
+                    link: format!("{}/Blog:Recent_posts", wiki.site()),
+                    desc: None,
+                },
             },
-            Minecraft => GenericPage {
-                title: "Official Minecraft Wiki".into(),
-                link: wiki.site(),
-                desc: Some("".into()),
-            }
+            _ => wiki.default(username),
         }
     }
 }

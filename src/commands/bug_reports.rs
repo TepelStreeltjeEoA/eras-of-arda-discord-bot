@@ -9,7 +9,7 @@ use serenity::prelude::*;
 use std::time::Duration;
 
 use crate::check::*;
-use crate::constants::{LOTR_DISCORD, MANAGE_BOT_PERMS, OWNER_ID};
+use crate::constants::{EOA_DISCORD, MANAGE_BOT_PERMS, OWNER_ID};
 use crate::database::admin_data::is_admin_function;
 use crate::database::bug_reports::{
     add_bug_report, add_link, add_notified_user, change_bug_status, change_category, change_title,
@@ -51,13 +51,13 @@ macro_rules! create_bug_embed {
     ($bug:expr, $linked_message:expr) => {
         |e| {
             e.author(|a| {
-                a.name("LOTR Mod Bugtracker");
+                a.name("Eras of Arda Bugtracker");
                 a.icon_url(crate::constants::TERMITE_IMAGE);
                 a
             });
             e.colour($bug.status.colour());
             e.title(format!(
-                "{} LOTR-{}: {} [{}]",
+                "{} EoA-{}: {} [{}]",
                 $bug.status.marker(),
                 $bug.bug_id,
                 $bug.title,
@@ -113,7 +113,7 @@ pub async fn notify_users(
         .message(ctx, bug.message_id)
         .await
         .map(|mut m| {
-            m.guild_id = Some(LOTR_DISCORD);
+            m.guild_id = Some(EOA_DISCORD);
             m
         });
     let message_link = linked_message.as_ref().map(|m| m.link()).ok();
@@ -132,7 +132,7 @@ pub async fn notify_users(
         if let Err(e) = channel
             .send_message(ctx, |m| {
                 m.content(format!(
-                    "**LOTR Mod Bugtracker notification {}**\n\n{}\n ",
+                    "**Eras of Arda Bugtracker notification {}**\n\n{}\n ",
                     ReactionType::from(EmojiIdentifier {
                         animated: false,
                         id: TERMITE_EMOJI,
@@ -201,7 +201,7 @@ pub async fn track(ctx: &Context, msg: &Message, mut args: Args) -> CommandResul
     msg.channel_id
         .send_message(ctx, |m| {
             m.content(format!(
-                "Tracking bug LOTR-{} (priority: `{}`, edition: {})",
+                "Tracking bug EoA-{} (priority: `{}`) [{}]",
                 bug_id, status, category
             ))
             .reference_message(referenced_message)
@@ -221,7 +221,7 @@ pub async fn track(ctx: &Context, msg: &Message, mut args: Args) -> CommandResul
     if let Err(e) = add_notified_user(ctx, bug_id, referenced_message.author.id).await {
         println!(
             "=== ERROR ===
-Could not subscribe bug author to bug LOTR-{bug_id}
+Could not subscribe bug author to bug EoA-{bug_id}
 Error: {e}
 === END ==="
         );
@@ -231,7 +231,7 @@ Error: {e}
     notify_users(
         ctx,
         bug_id,
-        "A bug report you submitted is being tracked in the LOTR Mod bugtracker.
+        "A bug report you submitted is being tracked in the Eras of Arda bugtracker.
 You will receive notifications when its status is changed or further information is added.",
     )
     .await
@@ -385,7 +385,7 @@ async fn display_bugs(
             () => {
                 |e| {
                     e.author(|a| {
-                        a.name("LOTR Mod Bugtracker");
+                        a.name("Eras of Arda Bugtracker");
                         a.icon_url(crate::constants::TERMITE_IMAGE);
                         a
                     });
@@ -558,7 +558,7 @@ pub async fn bug(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult 
     let bug_id = if let Ok(bug_id) = args.single::<String>() {
         if let Ok(bug_id) = bug_id
             .to_uppercase()
-            .trim_start_matches("LOTR-")
+            .trim_start_matches("EoA-")
             .parse::<u64>()
         {
             bug_id
@@ -574,7 +574,7 @@ pub async fn bug(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult 
     let mut bug = match get_bug_from_id(ctx, bug_id).await {
         Ok(bug) => bug,
         Err(e) => {
-            failure!(ctx, msg, "Bug LOTR-{} does not exist!", bug_id);
+            failure!(ctx, msg, "Bug EoA-{} does not exist!", bug_id);
             return Err(e);
         }
     };
@@ -639,12 +639,12 @@ pub async fn bug(ctx: &Context, msg: &Message, mut args: Args) -> CommandResult 
         .message(ctx, bug.message_id)
         .await
         .map(|mut m| {
-            m.guild_id = Some(LOTR_DISCORD);
+            m.guild_id = Some(EOA_DISCORD);
             m
         });
     let message_link = linked_message.as_ref().map(|m| m.link()).ok();
 
-    let is_lotr_discord = msg.guild_id == Some(LOTR_DISCORD);
+    let is_lotr_discord = msg.guild_id == Some(EOA_DISCORD);
     let is_admin = if let Some(guild_id) = msg.guild_id {
         is_admin_function(ctx, guild_id, msg.author.id)
             .await
@@ -743,7 +743,7 @@ pub async fn bug_status(ctx: &Context, msg: &Message, mut args: Args) -> Command
     if let Ok(bug_id) = args.single::<String>() {
         if let Ok(bug_id) = bug_id
             .to_uppercase()
-            .trim_start_matches("LOTR-")
+            .trim_start_matches("EoA-")
             .parse::<u64>()
         {
             if let Ok(new_status) = args.single::<BugStatus>() {
@@ -752,7 +752,7 @@ pub async fn bug_status(ctx: &Context, msg: &Message, mut args: Args) -> Command
                         termite_success!(
                             ctx,
                             msg,
-                            "Status changed for LOTR-{} from `{}` to `{}`!",
+                            "Status changed for EoA-{} from `{}` to `{}`!",
                             bug_id,
                             old_status,
                             new_status
@@ -760,7 +760,7 @@ pub async fn bug_status(ctx: &Context, msg: &Message, mut args: Args) -> Command
                         old_status
                     }
                     Err(e) => {
-                        failure!(ctx, msg, "The bug LOTR-{} does not exist!", bug_id);
+                        failure!(ctx, msg, "The bug EoA-{} does not exist!", bug_id);
                         return Err(e);
                     }
                 };
@@ -794,14 +794,14 @@ pub async fn resolve(ctx: &Context, msg: &Message, mut args: Args) -> CommandRes
     if let Ok(bug_id) = args.single::<String>() {
         if let Ok(bug_id) = bug_id
             .to_uppercase()
-            .trim_start_matches("LOTR-")
+            .trim_start_matches("EoA-")
             .parse::<u64>()
         {
             if let Err(e) = change_bug_status(ctx, bug_id, BugStatus::Resolved).await {
-                failure!(ctx, msg, "The bug LOTR-{} does not exist!", bug_id);
+                failure!(ctx, msg, "The bug EoA-{} does not exist!", bug_id);
                 return Err(e);
             } else {
-                termite_success!(ctx, msg, "LOTR-{} has been marked as resolved.", bug_id);
+                termite_success!(ctx, msg, "EoA-{} has been marked as resolved.", bug_id);
                 notify_users(
                     ctx,
                     bug_id,
@@ -825,14 +825,14 @@ pub async fn bug_close(ctx: &Context, msg: &Message, mut args: Args) -> CommandR
     if let Ok(bug_id) = args.single::<String>() {
         if let Ok(bug_id) = bug_id
             .to_uppercase()
-            .trim_start_matches("LOTR-")
+            .trim_start_matches("EoA-")
             .parse::<u64>()
         {
             if let Err(e) = change_bug_status(ctx, bug_id, BugStatus::Closed).await {
-                failure!(ctx, msg, "The bug LOTR-{} does not exist!", bug_id);
+                failure!(ctx, msg, "The bug EoA-{} does not exist!", bug_id);
                 return Err(e);
             } else {
-                termite_success!(ctx, msg, "LOTR-{} has been marked as closed.", bug_id);
+                termite_success!(ctx, msg, "EoA-{} has been marked as closed.", bug_id);
                 notify_users(
                     ctx,
                     bug_id,
@@ -857,7 +857,7 @@ pub async fn bug_link(ctx: &Context, msg: &Message, mut args: Args) -> CommandRe
     if let Ok(bug_id) = args.single::<String>() {
         if let Ok(bug_id) = bug_id
             .to_uppercase()
-            .trim_start_matches("LOTR-")
+            .trim_start_matches("EoA-")
             .parse::<u64>()
         {
             if let Some(message) = &msg.referenced_message {
@@ -867,7 +867,7 @@ pub async fn bug_link(ctx: &Context, msg: &Message, mut args: Args) -> CommandRe
                     return Ok(());
                 }
                 if let Some(link_id) = add_link(ctx, bug_id, &message.link(), title).await {
-                    termite_success!(ctx, msg, "Added link #{} to LOTR-{}", link_id, bug_id);
+                    termite_success!(ctx, msg, "Added link #{} to EoA-{}", link_id, bug_id);
                     notify_users(
                         ctx,
                         bug_id,
@@ -875,7 +875,7 @@ pub async fn bug_link(ctx: &Context, msg: &Message, mut args: Args) -> CommandRe
                     )
                     .await?;
                 } else {
-                    failure!(ctx, msg, "LOTR-{} does not exist!", bug_id);
+                    failure!(ctx, msg, "EoA-{} does not exist!", bug_id);
                 }
             } else if let Some(link) = args
                 .single::<String>()
@@ -888,7 +888,7 @@ pub async fn bug_link(ctx: &Context, msg: &Message, mut args: Args) -> CommandRe
                     return Ok(());
                 }
                 if let Some(link_id) = add_link(ctx, bug_id, &link, title).await {
-                    termite_success!(ctx, msg, "Added link #{} to LOTR-{}", link_id, bug_id);
+                    termite_success!(ctx, msg, "Added link #{} to EoA-{}", link_id, bug_id);
                     notify_users(
                         ctx,
                         bug_id,
@@ -896,7 +896,7 @@ pub async fn bug_link(ctx: &Context, msg: &Message, mut args: Args) -> CommandRe
                     )
                     .await?;
                 } else {
-                    failure!(ctx, msg, "LOTR-{} does not exist!", bug_id);
+                    failure!(ctx, msg, "EoA-{} does not exist!", bug_id);
                 }
             } else {
                 failure!(ctx, msg, "You need to either reference a message or specify a link to add to the bug report.");
@@ -917,7 +917,7 @@ pub async fn bug_link_remove(ctx: &Context, msg: &Message, mut args: Args) -> Co
     if let Ok(bug_id) = args.single::<String>() {
         if let Ok(bug_id) = bug_id
             .to_uppercase()
-            .trim_start_matches("LOTR-")
+            .trim_start_matches("EoA-")
             .parse::<u64>()
         {
             let link_id = args.single::<String>();
@@ -927,7 +927,7 @@ pub async fn bug_link_remove(ctx: &Context, msg: &Message, mut args: Args) -> Co
                         termite_success!(
                             ctx,
                             msg,
-                            "Successfully removed link #{} from LOTR-{}",
+                            "Successfully removed link #{} from EoA-{}",
                             link_id,
                             bug_id
                         );
@@ -935,7 +935,7 @@ pub async fn bug_link_remove(ctx: &Context, msg: &Message, mut args: Args) -> Co
                         failure!(
                             ctx,
                             msg,
-                            "Link #{} does not exist in LOTR-{}",
+                            "Link #{} does not exist in EoA-{}",
                             link_id,
                             bug_id
                         );
@@ -962,16 +962,16 @@ pub async fn bug_toggle_edition(ctx: &Context, msg: &Message, mut args: Args) ->
     if let Ok(bug_id) = args.single::<String>() {
         if let Ok(bug_id) = bug_id
             .to_uppercase()
-            .trim_start_matches("LOTR-")
+            .trim_start_matches("EoA-")
             .parse::<u64>()
         {
             if let Ok(category) = args.single::<BugCategory>() {
                 if let Some(old_category) = change_category(ctx, bug_id, category).await {
-                    if category != old_category {
+                     if category != old_category {
                         termite_success!(
                             ctx,
                             msg,
-                            "LOTR-{} has been changed from {} to {}",
+                            "EoA-{} has been changed from {} to {}",
                             bug_id,
                             old_category,
                             category
@@ -987,13 +987,14 @@ pub async fn bug_toggle_edition(ctx: &Context, msg: &Message, mut args: Args) ->
                         .await?;
                     }
                 } else {
-                    failure!(ctx, msg, "The bug LOTR-{} does not exist!", bug_id);
+                    failure!(ctx, msg, "The bug EoA-{} does not exist!", bug_id);
                 }
             } else {
                 failure!(
                     ctx,
                     msg,
-                    "The second argument must be either `renewed` or `legacy`."
+                    "The first argument must be one of \
+`fa_renewed`, `fa_legacy`, `sa_renewed` or `sa_legacy`"
                 );
             }
         } else {
@@ -1012,19 +1013,14 @@ pub async fn bug_rename(ctx: &Context, msg: &Message, mut args: Args) -> Command
     if let Ok(bug_id) = args.single::<String>() {
         if let Ok(bug_id) = bug_id
             .to_uppercase()
-            .trim_start_matches("LOTR-")
+            .trim_start_matches("EoA-")
             .parse::<u64>()
         {
             let new_title = args.rest();
             if new_title.is_empty() {
-                failure!(ctx, msg, "You must specify a new title for LOTR-{}", bug_id);
+                failure!(ctx, msg, "You must specify a new title for EoA-{}", bug_id);
             } else if change_title(ctx, bug_id, new_title).await.is_ok() {
-                termite_success!(
-                    ctx,
-                    msg,
-                    "Successfully changed the title of LOTR-{}",
-                    bug_id
-                );
+                termite_success!(ctx, msg, "Successfully changed the title of EoA-{}", bug_id);
                 notify_users(
                     ctx,
                     bug_id,
@@ -1032,7 +1028,7 @@ pub async fn bug_rename(ctx: &Context, msg: &Message, mut args: Args) -> Command
                 )
                 .await?
             } else {
-                failure!(ctx, msg, "LOTR-{} does not exist!", bug_id);
+                failure!(ctx, msg, "EoA-{} does not exist!", bug_id);
             }
         } else {
             failure!(ctx, msg, "`{}` is not a valid bug id!", bug_id);
@@ -1051,7 +1047,7 @@ pub async fn stats(ctx: &Context, msg: &Message) -> CommandResult {
             .send_message(ctx, |m| {
                 m.embed(|e| {
                     e.author(|a| {
-                        a.name("LOTR Mod Bugtracker");
+                        a.name("Eras of Arda Bugtracker");
                         a.icon_url(crate::constants::TERMITE_IMAGE);
                         a
                     });
@@ -1070,7 +1066,7 @@ _Open bugs: {}_
 {} critical bugs
 
 **Total: {} tracked bugs**
-\t_including {} legacy bugs_
+_{} first age bugs, {} second age bugs_
 ",
                             counts.resolved,
                             counts.closed,
@@ -1081,7 +1077,8 @@ _Open bugs: {}_
                             counts.high,
                             counts.critical,
                             counts.total,
-                            counts.legacy,
+                            counts.total - counts.second_age,
+                            counts.second_age
                         ),
                         false,
                     );
@@ -1129,7 +1126,7 @@ including those from closed or resolved bugs."
             .send_message(ctx, |m| {
                 m.embed(|e| {
                     e.author(|a| {
-                        a.name("LOTR Mod Bugtracker")
+                        a.name("Eras of Arda Bugtracker")
                             .icon_url(crate::constants::TERMITE_IMAGE)
                     })
                     .colour(serenity::utils::Colour::TEAL)
@@ -1137,7 +1134,7 @@ including those from closed or resolved bugs."
                     .description(format!(
                         "_List of bugs you are subscribed to_\n\n{}",
                         list.iter()
-                            .map(|id| format!("LOTR-{id}"))
+                            .map(|id| format!("EoA-{id}"))
                             .collect::<Vec<_>>()
                             .join(", "),
                     ))
@@ -1175,14 +1172,14 @@ pub async fn unsubscribe(ctx: &Context, msg: &Message, mut args: Args) -> Comman
     if let Err(e) =
         crate::database::bug_reports::remove_notified_user(ctx, bug_id, msg.author.id).await
     {
-        failure!(ctx, msg, "Could not unsubscribe from LOTR-{}", bug_id);
+        failure!(ctx, msg, "Could not unsubscribe from EoA-{}", bug_id);
         return Err(e);
     }
 
     crate::success!(
         ctx,
         msg,
-        "Successfully unsubscribed from LOTR-{}.
+        "Successfully unsubscribed from EoA-{}.
 You will no longer be notified if this bug is edited, closed or resolved.",
         bug_id
     );
@@ -1208,14 +1205,14 @@ pub async fn subscribe(ctx: &Context, msg: &Message, mut args: Args) -> CommandR
     if let Err(e) =
         crate::database::bug_reports::add_notified_user(ctx, bug_id, msg.author.id).await
     {
-        failure!(ctx, msg, "Could not subscribe to LOTR-{}", bug_id);
+        failure!(ctx, msg, "Could not subscribe to EoA-{}", bug_id);
         return Err(e);
     }
 
     crate::success!(
         ctx,
         msg,
-        "Successfully subscribed to LOTR-{}.
+        "Successfully subscribed to EoA-{}.
 You will be notified if this bug is edited, closed or resolved.",
         bug_id
     );

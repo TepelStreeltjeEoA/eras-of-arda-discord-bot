@@ -18,6 +18,63 @@ pub enum BugOrder {
     None,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BugCategory {
+    FaLegacy,
+    FaRenewed,
+    SaLegacy,
+    SaRenewed,
+}
+
+impl std::fmt::Display for BugCategory {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        use BugCategory::*;
+        match self {
+            FaLegacy => write!(f, "FA Legacy"),
+            FaRenewed => write!(f, "FA Renewed"),
+            SaLegacy => write!(f, "SA Legacy"),
+            SaRenewed => write!(f, "SA Renewed"),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct ParseCategoryError;
+
+impl std::str::FromStr for BugCategory {
+    type Err = ParseCategoryError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        use BugCategory::*;
+        Ok(match s.to_ascii_lowercase().as_str() {
+            "fa_legacy" => FaLegacy,
+            "fa_renewed" => FaRenewed,
+            "sa_legacy" => SaLegacy,
+            "sa_renewed" => SaRenewed,
+            _ => Err(ParseCategoryError)?,
+        })
+    }
+}
+
+impl BugCategory {
+    pub fn as_str(self) -> &'static str {
+        use BugCategory::*;
+
+        match self {
+            FaLegacy => "fa_legacy",
+            FaRenewed => "fa_renewed",
+            SaLegacy => "sa_legacy",
+            SaRenewed => "sa_renewed",
+        }
+    }
+}
+
+impl Default for BugCategory {
+    fn default() -> BugCategory {
+        BugCategory::FaRenewed
+    }
+}
+
 use BugStatus::*;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -40,23 +97,23 @@ impl std::fmt::Display for BugStatus {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct ParseStatusError;
 
 impl std::str::FromStr for BugStatus {
     type Err = ParseStatusError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s.to_lowercase().as_str() {
-            "resolved" => Ok(Resolved),
-            "low" => Ok(Low),
-            "medium" => Ok(Medium),
-            "high" => Ok(High),
-            "critical" => Ok(Critical),
-            "closed" => Ok(Closed),
-            "forgevanilla" | "forge" | "vanilla" => Ok(ForgeVanilla),
-            _ => Err(Self::Err {}),
-        }
+        Ok(match s.to_lowercase().as_str() {
+            "resolved" => Resolved,
+            "low" => Low,
+            "medium" => Medium,
+            "high" => High,
+            "critical" => Critical,
+            "closed" => Closed,
+            "forgevanilla" | "forge" | "vanilla" => ForgeVanilla,
+            _ => Err(Self::Err {})?,
+        })
     }
 }
 
@@ -206,7 +263,7 @@ impl std::fmt::Display for PartialBugReport {
         };
         write!(
             f,
-            "LOTR-{} — {}  ({})",
+            "EoA-{} — {}  ({})",
             self.bug_id,
             self.title,
             self.timestamp.format(format_str)
@@ -280,7 +337,7 @@ FROM {} WHERE bug_id = :bug_id",
         timestamp: DateTime::from_utc(timestamp, Utc),
         category: category
             .parse()
-            .expect("Expected a valid category from the database"),
+            .expect("Expected a valid bug category from the database"),
         links,
     })
 }
@@ -329,6 +386,8 @@ pub async fn get_bug_list(
 ) -> Option<(Vec<PartialBugReport>, u32)> {
     let mut conn = get_database_conn!(ctx);
 
+    println!("getting total...");
+
     let total: u32 = conn
         .query_first(format!(
             "SELECT COUNT(bug_id) FROM {} WHERE {} {category}",
@@ -346,6 +405,8 @@ pub async fn get_bug_list(
         ))
         .await
         .ok()??;
+
+    println!("total: {}", total);
 
     conn.exec_map(
         format!(
@@ -389,7 +450,7 @@ WHERE {} {category} ORDER BY {ordering} LIMIT :limit OFFSET :offset",
                 timestamp,
                 category
                     .parse()
-                    .expect("Expected a valid category from the database"),
+                    .expect("Expected a valid bug category from the database"),
             )
         },
     )
@@ -516,7 +577,7 @@ pub async fn change_title(ctx: &Context, bug_id: u64, new_title: &str) -> Comman
 }
 
 #[derive(Debug, Clone, Copy)]
-pub struct BugCounts {
+pub struct Counts {
     pub resolved: u32,
     pub low: u32,
     pub medium: u32,
@@ -525,10 +586,10 @@ pub struct BugCounts {
     pub closed: u32,
     pub forgevanilla: u32,
     pub total: u32,
-    pub legacy: u32,
+    pub second_age: u32,
 }
 
-pub async fn get_bug_statistics(ctx: &Context) -> Option<BugCounts> {
+pub async fn get_bug_statistics(ctx: &Context) -> Option<Counts> {
     let mut conn = get_database_conn!(ctx);
 
     let statuses = [
@@ -563,13 +624,13 @@ pub async fn get_bug_statistics(ctx: &Context) -> Option<BugCounts> {
 
     counts[8] = conn
         .query_first(formatcp!(
-            "SELECT COUNT(bug_id) FROM {} WHERE category = 'legacy'",
+            "SELECT COUNT(bug_id) FROM {} WHERE category = 'sa_legacy' OR category = 'sa_renewed'",
             TABLE_BUG_REPORTS
         ))
         .await
         .ok()??;
 
-    Some(BugCounts {
+    Some(Counts {
         resolved: counts[0],
         low: counts[1],
         medium: counts[2],
@@ -578,7 +639,7 @@ pub async fn get_bug_statistics(ctx: &Context) -> Option<BugCounts> {
         closed: counts[5],
         forgevanilla: counts[6],
         total: counts[7],
-        legacy: counts[8],
+        second_age: counts[8],
     })
 }
 

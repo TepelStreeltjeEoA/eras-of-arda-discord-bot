@@ -17,7 +17,7 @@ pub struct Handler;
 impl EventHandler for Handler {
     async fn ready(&self, ctx: Context, ready: Ready) {
         ctx.set_activity(Activity::playing(
-            "The Lord of the Rings Mod: Bringing Middle-earth to Minecraft",
+            "The Eras of Arda Community: creating addons and submods for the Lord of the Rings Mod.",
         ))
         .await;
 
@@ -131,7 +131,7 @@ impl EventHandler for Handler {
         let guild_id = match reaction.guild_id {
             None => return,
             Some(guild_id) => {
-                if guild_id != LOTR_DISCORD {
+                if guild_id != EOA_DISCORD {
                     return;
                 }
                 guild_id
@@ -147,7 +147,7 @@ impl EventHandler for Handler {
         let guild_id = match message.guild_id {
             None => return,
             Some(guild_id) => {
-                if guild_id != LOTR_DISCORD {
+                if guild_id != EOA_DISCORD {
                     return;
                 }
                 guild_id
@@ -187,7 +187,7 @@ impl EventHandler for Handler {
                         .say_ephemeral(
                             &ctx,
                             format!(
-                                ":x: You are not subscribed to bug LOTR-{}.
+                                ":x: You are not subscribed to bug EoA-{}.
 
 To see all your active notifications type  `!bug notifications`",
                                 bug_id
@@ -199,7 +199,7 @@ To see all your active notifications type  `!bug notifications`",
                 {
                     println!(
                         "=== ERROR ===\nCould not remove {} {:?} \
-from LOTR-{} notifications\nError: {}\n=== END ===",
+from EoA-{} notifications\nError: {}\n=== END ===",
                         user.tag(),
                         user.id,
                         bug_id,
@@ -210,7 +210,7 @@ from LOTR-{} notifications\nError: {}\n=== END ===",
                         .say_ephemeral(
                             &ctx,
                             format!(
-                                "You have successfully been unsubscribed from bug LOTR-{}.
+                                "You have successfully been unsubscribed from bug EoA-{}.
 
 To see all your active notifications type  `!bug notifications`",
                                 bug_id
@@ -230,7 +230,7 @@ To see all your active notifications type  `!bug notifications`",
                         .say_ephemeral(
                             &ctx,
                             format!(
-                                ":x: You are already subscribed to bug LOTR-{}.
+                                ":x: You are already subscribed to bug EoA-{}.
 
 To see all your active notifications type  `!bug notifications`",
                                 bug_id
@@ -242,7 +242,7 @@ To see all your active notifications type  `!bug notifications`",
                 {
                     println!(
                         "=== ERROR ===\nCould not add {} {:?} \
-to LOTR-{} notifications\nError: {}\n=== END ===",
+to EoA-{} notifications\nError: {}\n=== END ===",
                         user.tag(),
                         user.id,
                         bug_id,
@@ -253,7 +253,7 @@ to LOTR-{} notifications\nError: {}\n=== END ===",
                         .say_ephemeral(
                             &ctx,
                             format!(
-                                "You have successfully been subscribed to bug LOTR-{}.
+                                "You have successfully been subscribed to bug EoA-{}.
 
 To see all your active notifications type  `!bug notifications`",
                                 bug_id

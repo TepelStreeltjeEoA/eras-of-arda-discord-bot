@@ -20,12 +20,11 @@ pub async fn renewed(ctx: &Context, msg: &Message) -> CommandResult {
                 e.colour(Colour::DARK_GOLD);
                 e.title("Use the 1.7.10 version");
                 e.description(
-                    "The 1.16.5 version of the mod is a work in progress, missing many features \
-such as structures, mini quests or NPC speechbanks. You can find those in the full 1.7.10 Legacy \
-edition [here](https://www.curseforge.com/minecraft/mc-mods/the-lord-of-the-rings-mod-legacy).
+                    "The 1.16.5 addon is still in development \
+                    You can find the Legacy 1.7.10 submod here \
+edition [here](https://www.curseforge.com/minecraft/mc-mods/the-first-age-submod).
 
-For a list of features present in the renewed version, check \
-[this page](https://lotrminecraftmod.fandom.com/wiki/Updates/Renewed).",
+For a list of features present in the Renewed First Age addon, check the announcements channel.",
                 )
             });
 
@@ -239,8 +238,8 @@ pub async fn discord(ctx: &Context, msg: &Message) -> CommandResult {
     msg.channel_id
         .say(
             ctx,
-            "The invite for the **LOTR Mod Community Discord** is available here:
-https://discord.gg/QXkZzKU",
+            "The invite for the **Eras of Arda Community Discord** is available here:
+https://discord.gg/kQAh9eh",
         )
         .await?;
     Ok(())
@@ -255,11 +254,11 @@ pub async fn facebook(ctx: &Context, msg: &Message) -> CommandResult {
                 e.colour(Colour::new(0x1877F2));
                 e.description(
                     "Check the mod's Facebook page for
-updates and teasers [here](https://www.facebook.com/LOTRMC)!",
+updates and teasers [here](https://www.facebook.com/erasofarda/)!",
                 );
                 e.thumbnail(crate::constants::FACEBOOK_ICON);
                 e.title("Link to the Facebook page");
-                e.url("https://www.facebook.com/LOTRMC");
+                e.url("https://www.facebook.com/erasofarda/");
                 e
             })
             .components(|c| {
@@ -267,37 +266,7 @@ updates and teasers [here](https://www.facebook.com/LOTRMC)!",
                     a.create_button(|b| {
                         b.style(ButtonStyle::Link)
                             .label("Facebook page")
-                            .url("https://www.facebook.com/LOTRMC")
-                    })
-                })
-            })
-        })
-        .await?;
-    Ok(())
-}
-
-#[command]
-#[aliases("ig")]
-pub async fn instagram(ctx: &Context, msg: &Message) -> CommandResult {
-    msg.channel_id
-        .send_message(ctx, |m| {
-            m.embed(|e| {
-                e.colour(Colour::new(0xC13584));
-                e.description(
-                    "Check the mod's Instagram page for
-updates and teasers [here](https://www.instagram.com/lotrmcmod/)!",
-                );
-                e.thumbnail(crate::constants::INSTAGRAM_ICON);
-                e.title("Link to the Instagram page");
-                e.url("https://www.instagram.com/lotrmcmod/");
-                e
-            })
-            .components(|c| {
-                c.create_action_row(|a| {
-                    a.create_button(|b| {
-                        b.style(ButtonStyle::Link)
-                            .label("Instagram page")
-                            .url("https://www.instagram.com/lotrmcmod/")
+                            .url("https://www.facebook.com/erasofarda/")
                     })
                 })
             })
@@ -314,10 +283,8 @@ pub async fn donate(ctx: &Context, msg: &Message) -> CommandResult {
             m.embed(|e| {
                 e.colour(Colour::new(0xCEBD9C));
                 e.description(
-                    "Donations of **£5 GBP** or over will be thanked with the Patron \
-[Shield](https://lotrminecraftmod.fandom.com/wiki/Shield) & \
-[Title](https://lotrminecraftmod.fandom.com/wiki/Title) in the next released update if you write \
-your Minecraft username in the donation message.",
+                    "Donations will be thanked with the Supporter Shield \
+[Shield](https://erasofarda.fandom.com/wiki/Donator_Shield).",
                 );
                 e.thumbnail(crate::constants::DONATE_THUMBNAIL);
                 e.title("Donate to the mod!");
