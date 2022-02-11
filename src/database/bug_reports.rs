@@ -51,7 +51,7 @@ impl std::str::FromStr for BugCategory {
             "fa_renewed" => FaRenewed,
             "sa_legacy" => SaLegacy,
             "sa_renewed" => SaRenewed,
-            _ => Err(ParseCategoryError)?,
+            _ => return Err(ParseCategoryError),
         })
     }
 }
@@ -112,7 +112,7 @@ impl std::str::FromStr for BugStatus {
             "critical" => Critical,
             "closed" => Closed,
             "forgevanilla" | "forge" | "vanilla" => ForgeVanilla,
-            _ => Err(Self::Err {})?,
+            _ => return Err(Self::Err {}),
         })
     }
 }
@@ -185,51 +185,6 @@ pub struct BugLink {
 impl std::fmt::Display for BugLink {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "[{}]({}) (#{})", self.title, self.url, self.id)
-    }
-}
-
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub enum BugCategory {
-    Renewed,
-    Legacy,
-}
-
-#[derive(Debug, Clone)]
-pub struct ParseCategoryError;
-
-impl std::str::FromStr for BugCategory {
-    type Err = ParseCategoryError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        use BugCategory::*;
-
-        Ok(match s.to_ascii_lowercase().as_str() {
-            "renewed" => Renewed,
-            "legacy" => Legacy,
-            _ => Err(ParseCategoryError)?,
-        })
-    }
-}
-
-impl std::fmt::Display for BugCategory {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{:?}", self)
-    }
-}
-
-impl Default for BugCategory {
-    fn default() -> BugCategory {
-        BugCategory::Renewed
-    }
-}
-
-impl BugCategory {
-    pub const fn as_str(self) -> &'static str {
-        use BugCategory::*;
-        match self {
-            Renewed => "renewed",
-            Legacy => "legacy",
-        }
     }
 }
 
