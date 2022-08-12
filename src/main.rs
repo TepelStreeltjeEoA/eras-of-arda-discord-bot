@@ -44,7 +44,7 @@ use role_cache::RoleCache;
 
 #[group]
 #[commands(
-    help, renewed, curseforge, prefix, forge, coremod, invite, server_ip, online, donate, facebook,
+    help, renewed, legacy, curseforge, prefix, forge, coremod, invite, server_ip, online, donate, facebook,
     discord, user_info, role, listroles
 )]
 struct General;
