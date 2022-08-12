@@ -12,19 +12,43 @@ use crate::constants::{CURSEFORGE_ID_LEGACY, CURSEFORGE_ID_RENEWED};
 
 #[command]
 #[only_in(guilds)]
-#[aliases("legacy")]
 pub async fn renewed(ctx: &Context, msg: &Message) -> CommandResult {
     msg.channel_id
         .send_message(ctx, |m| {
             m.embed(|e| {
                 e.colour(Colour::DARK_GOLD);
-                e.title("Use the 1.7.10 version");
+                e.title("Renewed First Age and Second Age");
                 e.description(
-                    "The 1.16.5 addon is still in development \
-                    You can find the Legacy 1.7.10 submod here \
-edition [here](https://www.curseforge.com/minecraft/mc-mods/the-first-age-submod).
+                    "The 1.16.5 addon is available on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/the-first-age-submod) \
+                    It currently contains the First Age \
+                    It will contain the Second Age in the future \.
 
-For a list of features present in the Renewed First Age addon, check the announcements channel.",
+For a list of features present in the Renewed addon, check the announcements channel.",
+                )
+            });
+
+            m
+        })
+        .await?;
+
+    Ok(())
+}
+
+#[command]
+#[only_in(guilds)]
+pub async fn legacy(ctx: &Context, msg: &Message) -> CommandResult {
+    msg.channel_id
+        .send_message(ctx, |m| {
+            m.embed(|e| {
+                e.colour(Colour::DARK_GOLD);
+                e.title("Legacy First Age and Second Age");
+                e.description(
+                    "The Legacy versions of our submods can be found on CurseForge \
+                    They will not be updated frequently and only receive bug fixes \
+                    [Legacy First Age](https://www.curseforge.com/minecraft/mc-mods/the-first-age-submod) \
+                    [Legacy Second Age](https://www.curseforge.com/minecraft/mc-mods/eras-of-arda-the-second-age-submod) \
+
+Any future updates will be announced in the announcements channel.",
                 )
             });
 
