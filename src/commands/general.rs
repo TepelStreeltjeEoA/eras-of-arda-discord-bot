@@ -21,9 +21,8 @@ pub async fn renewed(ctx: &Context, msg: &Message) -> CommandResult {
                 e.description(
                     "The 1.16.5 addon is available on [CurseForge](https://www.curseforge.com/minecraft/mc-mods/the-first-age-submod) \
                     It currently contains the First Age \
-                    It will contain the Second Age in the future \.
-
-For a list of features present in the Renewed addon, check the announcements channel.",
+                    It will contain the Second Age in the future. \
+                    \nFor a list of features present in the Renewed addon, check the announcements channel.",
                 )
             });
 
@@ -47,8 +46,7 @@ pub async fn legacy(ctx: &Context, msg: &Message) -> CommandResult {
                     They will not be updated frequently and only receive bug fixes \
                     [Legacy First Age](https://www.curseforge.com/minecraft/mc-mods/the-first-age-submod) \
                     [Legacy Second Age](https://www.curseforge.com/minecraft/mc-mods/eras-of-arda-the-second-age-submod) \
-
-Any future updates will be announced in the announcements channel.",
+                    \nAny future updates will be announced in the announcements channel.",
                 )
             });
 
